@@ -4,10 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>为sun开的下载站</title>
-    <!-- 字体：优雅的衬线 + 无衬线混合 -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
     <style>
-        /* ----- 全局重置 & 基础 ----- */
+        /* 全局重置 & 字体 */
         * {
             margin: 0;
             padding: 0;
@@ -19,196 +17,212 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Inter', sans-serif;
-            background: #0b0a0c;
-            /* 深邃底色，为光效留空间 */
-            padding: 1.5rem;
+            background: #ffffff;
+            font-family: "Georgia", "Times New Roman", "Songti SC", serif;
+            padding: 2rem;
+            /* 微妙纹理 —— 极浅的网格，增加质感 */
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .container {
+            max-width: 720px;
+            width: 100%;
+            text-align: center;
+            padding: 3.5rem 2.5rem;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.04),
+                0 8px 24px rgba(0, 0, 0, 0.02),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.4s ease;
+        }
+
+        .container:hover {
+            box-shadow:
+                0 40px 80px rgba(0, 0, 0, 0.06),
+                0 12px 32px rgba(0, 0, 0, 0.03),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        /* 标题 —— 华丽但克制 */
+        .title {
+            font-size: clamp(2.4rem, 6vw, 3.8rem);
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            color: #000000;
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
+            font-family: "Georgia", "Times New Roman", "Songti SC", serif;
+        }
+
+        /* 装饰分隔线 —— 细长，带光泽 */
+        .divider {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #000000, transparent);
+            margin: 1.2rem auto 1.8rem auto;
+            opacity: 0.3;
+            border-radius: 2px;
+        }
+
+        /* 副标题 / 描述 */
+        .sub {
+            font-size: 0.95rem;
+            letter-spacing: 0.15em;
+            color: rgba(0, 0, 0, 0.45);
+            margin-bottom: 2.8rem;
+            font-weight: 300;
+            font-family: "Helvetica Neue", "PingFang SC", sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* 下载按钮 —— 白底黑字，极简但精致 */
+        .download-link {
+            display: inline-block;
+            padding: 1.1rem 3.6rem;
+            font-size: 1.2rem;
+            font-weight: 450;
+            color: #000000;
+            background: #ffffff;
+            border: 1.5px solid #000000;
+            border-radius: 60px;
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            font-family: "Georgia", "Times New Roman", serif;
             position: relative;
-            overflow-x: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
         }
 
-        /* ----- 华丽动态背景 ----- */
-        .bg-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(110px);
-            opacity: 0.5;
-            pointer-events: none;
-            z-index: 0;
-            animation: floatOrb 18s ease-in-out infinite alternate;
+        .download-link::after {
+            content: "↓";
+            display: inline-block;
+            margin-left: 0.6rem;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
         }
 
-        .bg-orb--1 {
-            width: 500px;
-            height: 500px;
-            top: -15%;
-            left: -10%;
-            background: radial-gradient(circle, #f7b2b7, #c779d0);
-            animation-duration: 22s;
+        .download-link:hover {
+            background: #000000;
+            color: #ffffff;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+            border-color: #000000;
         }
 
-        .bg-orb--2 {
-            width: 600px;
-            height: 600px;
-            bottom: -20%;
-            right: -15%;
-            background: radial-gradient(circle, #7dd3fc, #a78bfa);
-            animation-duration: 26s;
-            animation-delay: -6s;
+        .download-link:hover::after {
+            transform: translateY(2px);
         }
 
-        .bg-orb--3 {
-            width: 350px;
-            height: 350px;
-            top: 40%;
-            left: 55%;
-            background: radial-gradient(circle, #fcd34d, #f472b6);
-            opacity: 0.25;
-            animation-duration: 20s;
-            animation-delay: -10s;
+        .download-link:active {
+            transform: scale(0.97);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
 
-        @keyframes floatOrb {
+        /* 文件信息 —— 小字，优雅 */
+        .file-info {
+            margin-top: 2.4rem;
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.04em;
+            font-family: "SF Mono", "Menlo", monospace;
+            font-weight: 300;
+        }
+
+        .file-info span {
+            display: inline-block;
+            padding: 0 0.5rem;
+        }
+
+        .file-info .dot {
+            opacity: 0.2;
+        }
+
+        /* 极简脚标 */
+        .footer-note {
+            margin-top: 2.8rem;
+            font-size: 0.7rem;
+            color: rgba(0, 0, 0, 0.15);
+            letter-spacing: 0.2em;
+            font-family: "Helvetica Neue", sans-serif;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 2.5rem 1.5rem;
+                border-radius: 24px;
+            }
+
+            .download-link {
+                padding: 0.9rem 2.4rem;
+                font-size: 1rem;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .sub {
+                font-size: 0.75rem;
+                letter-spacing: 0.1em;
+            }
+
+            .divider {
+                width: 56px;
+            }
+        }
+
+        /* 可选：加载时优雅出现 */
+        .container {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
             0% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(40px, -30px) scale(1.1);
-            }
-            66% {
-                transform: translate(-20px, 40px) scale(0.9);
+                opacity: 0;
+                transform: translateY(12px);
             }
             100% {
-                transform: translate(30px, -20px) scale(1.05);
+                opacity: 1;
+                transform: translateY(0);
             }
         }
+    </style>
+</head>
+<body>
 
-        /* 细微噪点叠加，增加质感 */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 300px 300px;
-            opacity: 0.5;
-            mix-blend-mode: overlay;
-        }
+    <div class="container">
+        <!-- 标题 -->
+        <h1 class="title">为 sun 开的下载站</h1>
 
-        /* ----- 主卡片：华丽且简洁 ----- */
-        .card {
-            position: relative;
-            z-index: 10;
-            max-width: 640px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(24px) saturate(1.4);
-            -webkit-backdrop-filter: blur(24px) saturate(1.4);
-            border-radius: 48px;
-            padding: 3.5rem 3rem 4rem;
-            text-align: center;
-            box-shadow:
-                0 30px 80px rgba(0, 0, 0, 0.7),
-                inset 0 1px 0 rgba(255, 255, 255, 0.10),
-                0 0 0 1px rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: box-shadow 0.5s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        <!-- 装饰线 -->
+        <div class="divider"></div>
 
-        .card:hover {
-            box-shadow:
-                0 50px 120px rgba(0, 0, 0, 0.8),
-                inset 0 1px 0 rgba(255, 255, 255, 0.14),
-                0 0 0 1px rgba(255, 255, 255, 0.08);
-            transform: scale(1.005);
-        }
+        <!-- 副标题 -->
+        <p class="sub">— 一份心意 · 一份交付 —</p>
 
-        /* ----- 标题区 ----- */
-        .title-group {
-            margin-bottom: 2.8rem;
-        }
+        <!-- 下载链接 -->
+        <a href="heukms.zip" class="download-link" download>
+            下载 heukms.zip
+        </a>
 
-        .title-main {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-            font-size: clamp(2.6rem, 10vw, 4.4rem);
-            letter-spacing: -0.02em;
-            color: #fff;
-            text-shadow: 0 4px 40px rgba(255, 215, 215, 0.15);
-            line-height: 1.12;
-        }
+        <!-- 文件信息 -->
+        <div class="file-info">
+            <span>heukms.zip</span>
+            <span class="dot">·</span>
+            <span>直链下载</span>
+        </div>
 
-        .title-main .highlight {
-            background: linear-gradient(135deg, #f9d976, #f39b7b, #e573a0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-style: italic;
-            font-weight: 400;
-            position: relative;
-        }
+        <!-- 脚标 -->
+        <div class="footer-note">✦ 简洁 · 华丽 ✦</div>
+    </div>
 
-        .title-sub {
-            font-size: 0.85rem;
-            font-weight: 300;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 0.6rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            padding-top: 0.8rem;
-            display: inline-block;
-        }
-
-        /* 装饰分隔线 */
-        .divider {
-            width: 60px;
-            height: 2px;
-            margin: 0 auto 2.2rem;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 215, 0.35), transparent);
-            border-radius: 4px;
-        }
-
-        /* ----- 下载按钮：华丽焦点 ----- */
-        .download-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.9rem;
-            padding: 1.2rem 3.2rem 1.2rem 2.8rem;
-            background: linear-gradient(135deg, #ffffff 0%, #f0eef2 100%);
-            color: #0b0a0c;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            font-size: 1.25rem;
-            letter-spacing: 0.02em;
-            border-radius: 80px;
-            text-decoration: none;
-            border: none;
-            box-shadow:
-                0 8px 32px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* 按钮光晕 */
-        .download-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 80px;
-            padding: 2px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 215, 215, 0.2));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webk
+</body>
+</html>
